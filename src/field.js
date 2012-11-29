@@ -97,7 +97,7 @@ Form.Field = (function() {
         options.value = this.value;
       }
 
-      if(schema.condition && $.isFunction(schema.condition) && !schema.condition()) {
+      if(schema.condition && $.isFunction(schema.condition) && !schema.condition(this.model)) {
         
       } else {
         //Decide on the editor to use
