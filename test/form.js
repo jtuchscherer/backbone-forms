@@ -554,6 +554,30 @@ test("Events bubbling up from editors", function() {
     ok(spy.calledWith(form, form.fields.title.editor));
 });
 
+test("Works with conditional fields", function() {
+    var PostWithConditionalFields = Post.extend({
+      schema: {
+        title:      { type: 'Text' },
+        content:    { type: 'TextArea' },
+        author:     { condition: function(model){model.get("title").length > 0},
+        slug:       { condition: function(model){model.get("content").length > 0}
+     }
+    });
+  
+    var form = new Form({
+        model: new Post()
+    }).render();
+    
+    var spy = this.sinon.spy();
+    
+    form.on('title:whatever', spy);
+    
+    form.fields.title.editor.trigger('whatever', form.fields.title.editor);
+    
+    ok(spy.called);
+    ok(spy.calledWith(form, form.fields.title.editor));
+});
+
 test('Allows access to field views', function() {
     var form = new Form({
         model: new Post

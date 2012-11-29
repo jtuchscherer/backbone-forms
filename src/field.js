@@ -97,35 +97,38 @@ Form.Field = (function() {
         options.value = this.value;
       }
 
-      //Decide on the editor to use
-      var editor = this.editor = helpers.createEditor(schema.type, options);
-      
-      //Create the element
-      var $field = $(templates[schema.template](this.renderingContext(schema, editor)));
-      
-      //Render editor
-      $field.find('.bbf-tmp-editor').replaceWith(editor.render().el);
+      if(schema.condition && $.isFunction(schema.condition) && !schema.condition()) {
+        
+      } else {
+        //Decide on the editor to use
+        var editor = this.editor = helpers.createEditor(schema.type, options);
 
-      //Set help text
-      this.$help = $('.bbf-tmp-help', $field).parent();
-      this.$help.empty();
-      if (this.schema.help) this.$help.html(this.schema.help);
+        //Create the element
+        var $field = $(templates[schema.template](this.renderingContext(schema, editor)));
 
-      //Create error container
-      this.$error = $($('.bbf-tmp-error', $field).parent()[0]);
-      if (this.$error) this.$error.empty();
+        //Render editor
+        $field.find('.bbf-tmp-editor').replaceWith(editor.render().el);
 
-      //Add custom CSS class names
-      if (this.schema.fieldClass) $field.addClass(this.schema.fieldClass);
-      
-      //Add custom attributes
-      if (this.schema.fieldAttrs) $field.attr(this.schema.fieldAttrs);
-      
-      //Replace the generated wrapper tag
-      this.setElement($field);
+        //Set help text
+        this.$help = $('.bbf-tmp-help', $field).parent();
+        this.$help.empty();
+        if (this.schema.help) this.$help.html(this.schema.help);
 
+        //Create error container
+        this.$error = $($('.bbf-tmp-error', $field).parent()[0]);
+        if (this.$error) this.$error.empty();
+
+        //Add custom CSS class names
+        if (this.schema.fieldClass) $field.addClass(this.schema.fieldClass);
+
+        //Add custom attributes
+        if (this.schema.fieldAttrs) $field.attr(this.schema.fieldAttrs);
+
+        //Replace the generated wrapper tag
+        this.setElement($field);
+      }
       return this;
-    },
+  },
 
     /**
      * Creates the ID that will be assigned to the editor

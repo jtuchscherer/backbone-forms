@@ -92,12 +92,15 @@
                     radio:      { type: 'Radio', options: ['Opt 1', 'Opt 2'] },
                     select:     { type: 'Select', options: ['Opt 1', 'Opt 2'] },
                     checkboxes: { type: 'Checkboxes', options: ['Sterling', 'Lana', 'Cyril', 'Cheryl', 'Pam'] },
+                    
                     object:     { type: 'Object', subSchema: {
                       name: {},
                       age:  { type: 'Number' }
                     }},
                     nestedModel: { type: 'NestedModel', model: NestedModel },
                     customTemplate: { template: 'customField' },
+                    conditionalVisible: { condition: function(model){return true}},
+                    conditionalInvisible: { condition: function(model){return false}},
                     shorthand: 'Password',
                     date: { type: 'Date' },
                     dateTime: { type: 'DateTime', yearStart: 2000, yearEnd: 1980 },
@@ -127,7 +130,7 @@
             var form = new Backbone.Form({
                 model: model,
                 fieldsets: [
-                    ['email', 'tel', 'number', 'checkbox', 'radio', 'select', 'checkboxes', 'customTemplate', 'shorthand', 'date', 'dateTime'],
+                    ['email', 'tel', 'number', 'checkbox', 'radio', 'select', 'checkboxes', 'customTemplate', 'shorthand', 'conditionalVisible', 'conditionalInvisible', 'date', 'dateTime'],
                     { legend: 'Lists', fields: ['textList', 'objList'] },
                     { legend: 'jQuery UI editors', fields: ['jqueryDate', 'jqueryDateTime', 'jqueryList'] },
                     { legend: 'Nested editors', fields: ['object', 'nestedModel'] }

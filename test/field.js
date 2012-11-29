@@ -109,6 +109,26 @@ test("'schema.fieldAttrs' option - Adds custom attributes", function() {
   equal($el.attr('custom'), 'hello');
 })
 
+test("'schema.condition' option - Only renders the field if condition is true", function() {
+  var field = new Field({
+    key: 'title',
+    schema: { 
+      condition: function(){return true;} }
+  }).render();
+  
+  ok($('input', field.$el).length == 1);
+})
+
+test("'schema.condition' option - Does not render the field if condition is false", function() {
+  var field = new Field({
+    key: 'title',
+    schema: { 
+      condition: function(){return false;} }
+  }).render();
+  
+  ok($('input', field.$el).length == 0);
+})
+
 test("'schema.template' option - Specifies template", function() {
   Form.templates.custom = Form.helpers.createTemplate('<div class="custom-field"></div>');
   
