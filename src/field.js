@@ -97,36 +97,49 @@ Form.Field = (function() {
         options.value = this.value;
       }
 
-      if(schema.condition && $.isFunction(schema.condition) && !schema.condition(this.model)) {
-        
-      } else {
-        //Decide on the editor to use
-        var editor = this.editor = helpers.createEditor(schema.type, options);
+      //Decide on the editor to use
+      var editor = this.editor = helpers.createEditor(schema.type, options);
+      
+      //Create the element
+      var $field = $(templates[schema.template](this.renderingContext(schema, editor)));
+  
+      //Render editor
+      $field.find('.bbf-tmp-editor').replaceWith(editor.render().el);
+  
+      //Set help text
+      this.$help = $('.bbf-tmp-help', $field).parent();
+      this.$help.empty();
+      if (this.schema.help) this.$help.html(this.schema.help);
+  
+      //Create error container
+      this.$error = $($('.bbf-tmp-error', $field).parent()[0]);
+      if (this.$error) this.$error.empty();
+  
+      //Add custom CSS class names
+      if (this.schema.fieldClass) $field.addClass(this.schema.fieldClass);
+  
+      //Add custom attributes
+      if (this.schema.fieldAttrs) $field.attr(this.schema.fieldAttrs);
+      
+      if(schema.condition && $.isFunction(schema.condition) && !schema.condition(this.model, this.form ? this.form.getValue() : {})) {
+        $field.empty();
+      } 
+      
+      if(schema.condition && $.isFunction(schema.condition) && this.form) {
+        console.log(this.key);
+        var that  = this;
+        this.form.on("change", function(form){
+          (function (form) {form.off("change", arguments.caller);})(that.form);
 
-        //Create the element
-        var $field = $(templates[schema.template](this.renderingContext(schema, editor)));
-
-        //Render editor
-        $field.find('.bbf-tmp-editor').replaceWith(editor.render().el);
-
-        //Set help text
-        this.$help = $('.bbf-tmp-help', $field).parent();
-        this.$help.empty();
-        if (this.schema.help) this.$help.html(this.schema.help);
-
-        //Create error container
-        this.$error = $($('.bbf-tmp-error', $field).parent()[0]);
-        if (this.$error) this.$error.empty();
-
-        //Add custom CSS class names
-        if (this.schema.fieldClass) $field.addClass(this.schema.fieldClass);
-
-        //Add custom attributes
-        if (this.schema.fieldAttrs) $field.attr(this.schema.fieldAttrs);
-
-        //Replace the generated wrapper tag
-        this.setElement($field);
+          that.form = form;
+          var $oldEl = $(that.el);
+          var $el = that.render().el;
+          $oldEl.replaceWith($el);
+        });
       }
+        
+      this.setElement($field);
+
       return this;
   },
 

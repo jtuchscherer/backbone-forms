@@ -149,34 +149,33 @@ var Form = (function() {
 
         //Render the fields with editors, apart from Hidden fields
         var fieldEl = field.render().el;
-        if(field.editor) {
-            field.editor.on('all', function(event) {
-              // args = ["change", editor]
-              var args = _.toArray(arguments);
-              args[0] = key + ':' + event;
-              args.splice(1, 0, this);
-              // args = ["key:change", this=form, editor]
-    
-              this.trigger.apply(this, args);
-            }, self);
-            
-            field.editor.on('change', function() {
-              this.trigger('change', self);
-            }, self);
-    
-            field.editor.on('focus', function() {
-              if (this.hasFocus) return;
-              this.trigger('focus', this);
-            }, self);
-            field.editor.on('blur', function() {
-              if (!this.hasFocus) return;
-              var self = this;
-              setTimeout(function() {
-                if (_.find(self.fields, function(field) { return field.editor.hasFocus; })) return;
-                self.trigger('blur', self);
-              }, 0);
-            }, self);
-        }
+        
+        field.editor.on('all', function(event) {
+          // args = ["change", editor]
+          var args = _.toArray(arguments);
+          args[0] = key + ':' + event;
+          args.splice(1, 0, this);
+          // args = ["key:change", this=form, editor]
+
+          this.trigger.apply(this, args);
+        }, self);
+        
+        field.editor.on('change', function() {
+          this.trigger('change', self);
+        }, self);
+
+        field.editor.on('focus', function() {
+          if (this.hasFocus) return;
+          this.trigger('focus', this);
+        }, self);
+        field.editor.on('blur', function() {
+          if (!this.hasFocus) return;
+          var self = this;
+          setTimeout(function() {
+            if (_.find(self.fields, function(field) { return field.editor.hasFocus; })) return;
+            self.trigger('blur', self);
+          }, 0);
+        }, self);
         
         if (itemSchema.type !== 'Hidden') {
           $fieldsContainer.append(fieldEl);
