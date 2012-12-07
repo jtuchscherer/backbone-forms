@@ -102,7 +102,16 @@ Form.Field = (function() {
       
       //Create the element
       var $field = $(templates[schema.template](this.renderingContext(schema, editor)));
+<<<<<<< HEAD
   
+=======
+
+      //Remove <label> if it's not wanted
+      if (schema.title === false) {
+        $field.find('label[for="'+editor.id+'"]').first().remove();
+      }
+      
+>>>>>>> upstream/master
       //Render editor
       $field.find('.bbf-tmp-editor').replaceWith(editor.render().el);
   
